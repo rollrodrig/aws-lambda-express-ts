@@ -1,0 +1,38 @@
+service: carpooling # NOTE: update this with your service name
+custom:
+  PROFILE: serverless-admin
+  STAGE: dev
+  REGION: us-east-1
+  API: api
+  API_VERSION: v1
+  serverless-offline:
+    port: 7500
+provider:
+  name: aws
+  runtime: nodejs10.x
+  profile: ${self:custom.PROFILE}
+  stage: ${self:custom.STAGE}
+  region: ${self:custom.REGION}
+  environment:
+    API: ${self:custom.API}
+    API_VERSION: ${self:custom.API_VERSION}
+    LAMBDA: 1
+functions:
+  hello:
+    handler: index.handler
+    events:
+      - http:
+          path: hello
+          method: get
+          cors: true
+  login:
+    handler: index.handler
+    events:
+      - http:
+          path: /${self:custom.API}/${self:custom.API_VERSION}/login
+          method: post
+          cors: true
+
+  
+plugins:
+  - serverless-offline
